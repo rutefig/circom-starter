@@ -43,6 +43,10 @@ module.exports = {
       {
         name: "deny-sig",
         protocol: "plonk"
+      },
+      {
+        name: "is-zero",
+        protocol: "plonk"
       }
     ],
   },

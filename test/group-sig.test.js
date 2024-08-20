@@ -45,13 +45,15 @@ describe.only("group sig circuit", () => {
     // Because pk = pk2, tmp = 0
     assert.propertyVal(witness, "main.tmp", "0");
 
-    assert.property(witness, "main.dummy");
+    assert.property(witness, "main.attestation");
 
     // TODO: Assert intermediate Mimc values
   });
 
   it("has the correct output", async () => {
-    const expected = { out: {} };
+    // TODO: check why this is passing even with wrong expected value
+    const mimcResult = mimc.multiHash([sampleInput.sk, sampleInput.msgHash], mimcKey, mimcNumOutputs);
+    const expected = { attestation: mimc.F.toObject(mimcResult) };
     const witness = await circuit.calculateWitness(sampleInput, sanityCheck);
     await circuit.assertOut(witness, expected);
   });

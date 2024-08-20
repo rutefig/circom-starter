@@ -9,6 +9,9 @@ template GroupSig () {
     signal input pk2;
     signal input pk3;
 
+    // This will be used if we want to be able to reveal and deny the msg
+    signal output attestation;
+
     // Now this proof will be tied to a message which means
     // We can't use the same proof for different messages
     signal input msgHash;
@@ -30,11 +33,12 @@ template GroupSig () {
     tmp <== (pk - pk1) * (pk - pk2);
     tmp * (pk - pk3) === 0;
 
-    // Dummy way to tie the proof to the msg is to just add a signal that is dependent on it
-    // The reason behind it is if we don't have any computation using msgHash
-    // The circom compiler will optimize it out
-    signal dummy;
-    dummy <== msgHash * msgHash;
+    component attestGen = MiMCSponge(2, 220, 1); // inputs are sk and msgHash, and the output will be attestation
+    attestGen.ins[0] <== sk;
+    attestGen.ins[1] <== msgHash;
+    attestGen.k <== 0; // this is just a salt
+
+    attestation <== attestGen.outs[0];
 }
 
 component main { public [ pk1, pk2, pk3, msgHash ] } = GroupSig();

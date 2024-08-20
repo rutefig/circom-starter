@@ -2,7 +2,7 @@ const hre = require("hardhat");
 const { assert } = require("chai");
 const { buildMimcSponge } = require("circomlibjs");
 
-describe.only("group sig circuit", () => {
+describe("group sig circuit", () => {
   let circuit;
   let mimc;
 
